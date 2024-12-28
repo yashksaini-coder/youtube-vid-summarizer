@@ -82,7 +82,7 @@ function transformSummary(summary: string): string {
 
 // Example usage
 (async () => {
-    const videoUrl = "https://www.youtube.com/watch?v=k0bBmv45bNQ";
+    const videoUrl = "https://youtu.be/esa0jBSUVCU";
 
     try {
         const chunks = await fetchTranscriptInChunks(videoUrl);

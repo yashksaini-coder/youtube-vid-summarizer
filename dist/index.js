@@ -86,7 +86,7 @@ function transformSummary(summary) {
 }
 // Example usage
 (() => __awaiter(void 0, void 0, void 0, function* () {
-    const videoUrl = "https://www.youtube.com/watch?v=k0bBmv45bNQ";
+    const videoUrl = "https://youtu.be/esa0jBSUVCU";
     try {
         const chunks = yield fetchTranscriptInChunks(videoUrl);
         // console.log("Transcript Chunks:", chunks);
