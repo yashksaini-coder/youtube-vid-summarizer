@@ -1,0 +1,22 @@
+{
+  "name": "yt-sum",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "tsc -b && node ./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "@types/typescript": "^0.4.29",
+    "dotenv": "^16.4.7",
+    "groq-sdk": "^0.9.1",
+    "typescript": "^5.7.2",
+    "youtube-transcript": "^1.2.1"
+  }
+}
