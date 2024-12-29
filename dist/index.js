@@ -8,11 +8,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const youtube_transcript_1 = require("youtube-transcript");
 const groq_sdk_1 = require("groq-sdk");
-// Load environment variables
 require('dotenv').config();
+const app = (0, express_1.default)();
+const PORT = process.env.PORT || 3000;
+// Middleware
+app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 const groq = new groq_sdk_1.Groq({ apiKey: process.env.GROQ_API_KEY });
 /**
  * Fetches the transcript of a YouTube video in chunks to handle long videos.
@@ -66,7 +75,7 @@ function generateSummaryForChunks(chunks) {
                 if (content)
                     summaries.push(content.trim());
             }
-            // Combine summaries into a single bullet-pointed list
+            // Combining summaries into a single bullet-pointed list
             return summaries.map((summary) => `- ${summary}`).join("\n");
         }
         catch (error) {
@@ -84,16 +93,38 @@ function transformSummary(summary) {
     // Combine cleaned lines into a readable paragraph format
     return cleanedLines.join(" ").replace(/\s+/g, " ").trim();
 }
-// Example usage
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    const videoUrl = "https://youtu.be/esa0jBSUVCU";
+// API Endpoints
+app.post('/api/summarize', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { videoUrl } = req.body; // Changed from const videoUrl = req.body
+    if (!videoUrl) {
+        return res.status(400).json({
+            success: false,
+            error: 'Video URL is required'
+        });
+    }
     try {
         const chunks = yield fetchTranscriptInChunks(videoUrl);
-        // console.log("Transcript Chunks:", chunks);
         const summary = yield generateSummaryForChunks(chunks);
-        console.log("Combined Summary:", transformSummary(summary));
+        const transformedSummary = transformSummary(summary);
+        res.json({
+            success: true,
+            data: {
+                summary: transformedSummary,
+                videoUrl
+            }
+        });
     }
     catch (error) {
-        console.error("We encountered an error:", error);
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to generate summary'
+        });
     }
-}))();
+}));
+// Health check endpoint
+app.get('/health', (_, res) => {
+    res.json({ status: 'ok' });
+});
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

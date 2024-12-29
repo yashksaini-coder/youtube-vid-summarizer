@@ -3,9 +3,8 @@ import cors from 'cors';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { Groq } from 'groq-sdk';
 
-// Load environment variables
-require('dotenv').config();
 
+require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -69,7 +68,7 @@ async function generateSummaryForChunks(chunks: string[][]): Promise<string> {
             if (content) summaries.push(content.trim());
         }
 
-        // Combine summaries into a single bullet-pointed list
+        // Combining summaries into a single bullet-pointed list
         return summaries.map((summary) => `- ${summary}`).join("\n");
     } catch (error) {
         console.error("Error generating summary:", error);
@@ -91,7 +90,7 @@ function transformSummary(summary: string): string {
 
 // API Endpoints
 app.post('/api/summarize', async (req, res) => {
-    const { videoUrl } = req.body;
+    const { videoUrl } = req.body;  // Changed from const videoUrl = req.body
 
     if (!videoUrl) {
         return res.status(400).json({
@@ -125,7 +124,6 @@ app.get('/health', (_, res) => {
     res.json({ status: 'ok' });
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
