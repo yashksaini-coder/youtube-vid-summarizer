@@ -1,8 +1,17 @@
+import express from 'express';
+import cors from 'cors';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { Groq } from 'groq-sdk';
 
 // Load environment variables
 require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+app.use(cors());
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -80,17 +89,43 @@ function transformSummary(summary: string): string {
     return cleanedLines.join(" ").replace(/\s+/g, " ").trim();
 }
 
-// Example usage
-(async () => {
-    const videoUrl = "https://youtu.be/esa0jBSUVCU";
+// API Endpoints
+app.post('/api/summarize', async (req, res) => {
+    const { videoUrl } = req.body;
+
+    if (!videoUrl) {
+        return res.status(400).json({
+            success: false,
+            error: 'Video URL is required'
+        });
+    }
 
     try {
         const chunks = await fetchTranscriptInChunks(videoUrl);
-        // console.log("Transcript Chunks:", chunks);
-
         const summary = await generateSummaryForChunks(chunks);
-        console.log("Combined Summary:", transformSummary(summary));
-    } catch (error) {
-        console.error("We encountered an error:", error);
+        const transformedSummary = transformSummary(summary);
+
+        res.json({
+            success: true,
+            data: {
+                summary: transformedSummary,
+                videoUrl
+            }
+        });
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            error: error.message || 'Failed to generate summary'
+        });
     }
-})();
+});
+
+// Health check endpoint
+app.get('/health', (_, res) => {
+    res.json({ status: 'ok' });
+});
+
+// Start server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
