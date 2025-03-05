@@ -89,7 +89,7 @@ Found a bug or need help? Please create an issue on the [GitHub repository](http
 <table>
   <tbody>
     <tr>
-        <td align="center" valign="top" width="14.28%"><a href="yashksaini-coder"><img src="https://github.com/yashksaini-coder.png?s=100" width="130px;" alt="Arnav K"/></a><br /><a href="yashksaini-coder"<h4><b>Arnav K</b></h3></a></td>
+        <td align="center" valign="top" width="14.28%"><a href="yashksaini-coder"><img src="https://github.com/yashksaini-coder.png?s=100" width="130px;" alt="Yash K Saini"/></a><br /><a href="yashksaini-coder"<h4><b>Yash K. Saini</b></h3></a></td>
     </tr>
   </tbody>
 </table>
